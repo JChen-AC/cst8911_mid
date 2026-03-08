@@ -8,13 +8,14 @@
 
 from flask import Flask, jsonify, request, abort
 import time
+import socket 
 
 app = Flask(__name__)
 
 # Define route to handle requests to the root URL ('/')
 @app.route('/')
 def index():
-    return "Welcome to Flask REST API Demo! "
+    return "VMSS Test App! "
 
 # Health check route (GET)
 # This endpoint returns a 200 OK status and a JSON response to confirm that the service is running.
@@ -24,13 +25,13 @@ def health_check():
 
 # Send process request 
 @app.route('/test',methods=['GET'])
-def test_check():
+def cpu_test():
     
     total = 0
-    for i in range(10**8):
+    for i in range(10**9):
         total += i
     
-    return jsonify({"status":"Test completed"}),201
+    return jsonify({"message":f"CPU Test completed : serveved by {socket.gethostname()}"}),201
 
 # Entry point for running the Flask app
 # The app will run on host 0.0.0.0 (accessible on all network interfaces) and port 8000.
