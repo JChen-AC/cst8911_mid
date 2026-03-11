@@ -10,14 +10,14 @@ sudo apt install git -y
 mkdir app
 cd ./app
 
-git clone web_app
+# Clone repository
+git clone https://github.com/JChen-AC/cst8911_mid.git
 
-cd ./web_app
+cd cst8911_mid
+
 python3 -m venv .venv 
 
 source ./.venv/bin/activate
 pip install -r requirements.txt
 
-nohup python ./vm_app.py > flask.log >2>&1 &
-
-# HOW DOES IT HANDLE ASKING FOR USER PASSWORD
+nohup python ./vm_app.py > flask.log 2>&1 &
