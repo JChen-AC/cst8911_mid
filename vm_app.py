@@ -93,13 +93,15 @@ def adf_test():
 @app.route('/adf_blob', methods=['POST'])
 def adf_blob_test():
     inputs_data = request.json 
+    filename = inputs_data["filename"]
+    container = inputs_data["container"]    
     try:
         LOCAL_PATH = "./blob_test_download"
         os.makedirs(LOCAL_PATH,exist_ok=True)
 
-        processed_blob = "processed_" + inputs_data.filename
+        processed_blob = "processed_" + filename
         processed_path = os.path.join(LOCAL_PATH,processed_blob)
-        temp = input_container_client.download_blob(inputs_data.filename).readall() 
+        temp = input_container_client.download_blob(filename).readall() 
         str_arr = temp.decode('utf-8')
         np_arr = np.array(str_arr.split(','),dtype=int)
         sort_arr = np.sort(np_arr)
