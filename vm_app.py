@@ -85,6 +85,10 @@ def blob_test():
         print(ex)
         return jsonify({"ERROR":f"Blob test failed :error caused by {ex}"}),502
 
+@app.route('/adf', methods=['POST'])
+def adf_test():
+    inputs_data = request.json    
+    return jsonify(inputs_data), 203  # Return HTTP status 200 OK
     
 
 
