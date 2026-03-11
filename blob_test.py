@@ -17,7 +17,7 @@ try:
     #print(decoded["upn"])
 
     input_container_client = blob_service_client.get_container_client("inputs")
-    output_container_client = blob_service_client.get_container_client("output")
+    output_container_client = blob_service_client.get_container_client("outputs")
 
 
 except Exception as ex:
@@ -41,11 +41,13 @@ blob_list = input_container_client.list_blobs()
 print(f"blob list: {blob_list}\n")
 print(f"blob list type: {type(blob_list)}")
 print("Print blob list")
+processed_blob = ""
 for blob in blob_list:
     print("\t" + blob.name)
     download_path = os.path.join(LOCAL_PATH,"temp_" + blob.name)
     print("\nDownloading blob to \n\t" + download_path)
-    processed_path = os.path.join(LOCAL_PATH,"processed_" + blob.name)
+    processed_blob = "processed_" + blob.name
+    processed_path = os.path.join(LOCAL_PATH,processed_blob)
     temp = input_container_client.download_blob(blob.name).readall() 
     print(f"\n temp type : {type(temp)}")
     print(f"temp value : {temp}\n")
@@ -63,4 +65,8 @@ for blob in blob_list:
 
 
 ### WRITE TEST ###
-
+print("UPLOADING BLOB")
+new_blob = blob_service_client.get_blob_client(container="outputs",blob=processed_blob)
+# Upload the created file
+with open(file=processed_path, mode="rb") as data:
+    new_blob.upload_blob(data)
