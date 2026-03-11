@@ -14,6 +14,20 @@ from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import numpy as np
 
+try:
+    print("Getting Authentication")
+    account_url = "https://cst8911test.blob.core.windows.net"
+    default_credential = DefaultAzureCredential()
+    blob_service_client = BlobServiceClient(account_url, credential=default_credential)
+    token = default_credential.get_token("https://storage.azure.com/.default")
+    input_container_client = blob_service_client.get_container_client("inputs")
+    output_container_client = blob_service_client.get_container_client("outputs")
+
+
+except Exception as ex:
+    print('ERROR:')
+    print(ex)
+
 app = Flask(__name__)
 
 # Define route to handle requests to the root URL ('/')
