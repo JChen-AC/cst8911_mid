@@ -94,7 +94,7 @@ def adf_test():
 def adf_blob_test():
     inputs_data = request.json 
     filename = inputs_data["filename"]
-    container = inputs_data["container"]    
+    
     try:
         LOCAL_PATH = "./blob_test_download"
         os.makedirs(LOCAL_PATH,exist_ok=True)
@@ -119,8 +119,41 @@ def adf_blob_test():
     except Exception as ex:
         print('ERROR:')
         print(ex)
-        return jsonify({"ERROR":f"Blob test failed :error caused by {ex}"}),502
-    
+        return jsonify({"ERROR":f"Blob test failed :error caused by {str(ex)}"}),502
+
+@app.route('/full_test', methods=['POST'])
+def full_test():
+    inputs_data = request.json 
+    filename = inputs_data["filename"]
+    total = 0
+    for i in range(10**9):
+        total += i 
+    try:
+        LOCAL_PATH = "./blob_test_download"
+        os.makedirs(LOCAL_PATH,exist_ok=True)
+
+        processed_blob = "processed_" + filename
+        processed_path = os.path.join(LOCAL_PATH,processed_blob)
+        temp = input_container_client.download_blob(filename).readall() 
+        str_arr = temp.decode('utf-8')
+        np_arr = np.array(str_arr.split(','),dtype=int)
+        sort_arr = np.sort(np_arr)
+        np.savetxt(processed_path, sort_arr.reshape(1,-1), delimiter=",", fmt="%d")
+
+        ### WRITE TEST ###
+        print("UPLOADING BLOB")
+        new_blob = blob_service_client.get_blob_client(container="outputs",blob=processed_blob)
+        # Upload the created file
+        with open(file=processed_path, mode="rb") as data:
+            new_blob.upload_blob(data)
+        os.remove(processed_path)
+
+        return jsonify({"message":f"Blob Test completed : serveved by {socket.gethostname()}"}),201
+    except Exception as ex:
+        print('ERROR:')
+        print(ex)
+        return jsonify({"ERROR":f"Blob test failed :error caused by {str(ex)}"}),502
+
 
 # Entry point for running the Flask app
 # The app will run on host 0.0.0.0 (accessible on all network interfaces) and port 8000.
