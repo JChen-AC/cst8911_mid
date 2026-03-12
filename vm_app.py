@@ -94,7 +94,7 @@ def adf_test():
 def adf_blob_test():
     inputs_data = request.json 
     filename = inputs_data["filename"]
-    
+
     try:
         LOCAL_PATH = "./blob_test_download"
         os.makedirs(LOCAL_PATH,exist_ok=True)
@@ -106,7 +106,11 @@ def adf_blob_test():
         np_arr = np.array(str_arr.split(','),dtype=int)
         sort_arr = np.sort(np_arr)
         np.savetxt(processed_path, sort_arr.reshape(1,-1), delimiter=",", fmt="%d")
-
+    except Exception as ex:
+        print('ERROR:')
+        print(ex)
+        return jsonify({"ERROR":f"ADF Blob test failed when trying to read blob: error caused by {str(ex)}"}),503
+    try:
         ### WRITE TEST ###
         print("UPLOADING BLOB")
         new_blob = blob_service_client.get_blob_client(container="outputs",blob=processed_blob)
@@ -119,7 +123,7 @@ def adf_blob_test():
     except Exception as ex:
         print('ERROR:')
         print(ex)
-        return jsonify({"ERROR":f"Blob test failed :error caused by {str(ex)}"}),502
+        return jsonify({"ERROR":f"Blob test failed when trying to write to blob:error caused by {str(ex)}"}),504
 
 @app.route('/full_test', methods=['POST'])
 def full_test():
