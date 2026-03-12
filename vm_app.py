@@ -20,8 +20,8 @@ try:
     default_credential = DefaultAzureCredential()
     blob_service_client = BlobServiceClient(account_url, credential=default_credential)
     token = default_credential.get_token("https://storage.azure.com/.default")
-    input_container_client = blob_service_client.get_container_client("inputs")
-    output_container_client = blob_service_client.get_container_client("outputs")
+    input_container_client = blob_service_client.get_container_client("input")
+    output_container_client = blob_service_client.get_container_client("output")
 
 
 except Exception as ex:
