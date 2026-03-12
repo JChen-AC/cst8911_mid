@@ -17,9 +17,10 @@ import numpy as np
 try:
     print("Getting Authentication")
     account_url = "https://8911midterm.blob.core.windows.net"
-    default_credential = ManagedIdentityCredential(client_id="a5f2987b-e549-4953-a909-063a9b659fc1")
+    #default_credential = ManagedIdentityCredential(client_id="a5f2987b-e549-4953-a909-063a9b659fc1")
+    default_credential = DefaultAzureCredential()
     blob_service_client = BlobServiceClient(account_url, credential=default_credential)
-    token = default_credential.get_token("https://storage.azure.com/.default")
+    #token = default_credential.get_token("https://storage.azure.com/.default")
     input_container_client = blob_service_client.get_container_client("input")
     output_container_client = blob_service_client.get_container_client("output")
 
