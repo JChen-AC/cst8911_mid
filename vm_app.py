@@ -14,12 +14,13 @@ from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import numpy as np
 
-OUTPUT_CONTAINER = "outputs"
-INPUT_CONTAINER = "inputs"
-
+OUTPUT_CONTAINER = "output"
+INPUT_CONTAINER = "input"
+acc1 = "https://cst8911test.blob.core.windows.net"
+acc2 = "https://8911midterm.blob.core.windows.net"
 try:
     print("Getting Authentication")
-    account_url = "https://cst8911test.blob.core.windows.net"
+    account_url = acc2
     #default_credential = ManagedIdentityCredential(client_id="a5f2987b-e549-4953-a909-063a9b659fc1")
     default_credential = DefaultAzureCredential()
     blob_service_client = BlobServiceClient(account_url, credential=default_credential)
