@@ -22,7 +22,8 @@ try:
     print("Getting Authentication")
     account_url = acc2
     #default_credential = ManagedIdentityCredential(client_id="a5f2987b-e549-4953-a909-063a9b659fc1")
-    default_credential = DefaultAzureCredential()
+    default_credential = ManagedIdentityCredential()
+    #default_credential = DefaultAzureCredential()
     blob_service_client = BlobServiceClient(account_url, credential=default_credential)
     #token = default_credential.get_token("https://storage.azure.com/.default")
     input_container_client = blob_service_client.get_container_client(INPUT_CONTAINER)
@@ -96,7 +97,9 @@ def blob_read():
     ## LIST BLOB NAMES ##
     print("Reading contianer")
     blob_list = input_container_client.list_blobs()
-    return jsonify({"message":f"Blob Test completed : {blob_list}"}),205
+    blobs = [blob.name for blob in input_container_client.list_blobs()]
+
+    return jsonify({"message":f"Blob Test completed : {blobs}"}),205
 
 @app.route('/adf', methods=['POST'])
 def adf_test():
@@ -114,7 +117,8 @@ def adf_blob_test():
 
         processed_blob = "processed_" + filename
         processed_path = os.path.join(LOCAL_PATH,processed_blob)
-        temp = input_container_client.download_blob(filename).readall() 
+        blob_client = input_container_client.get_blob_client(filename)
+        temp = blob_client.download_blob().readall()
         str_arr = temp.decode('utf-8')
         np_arr = np.array(str_arr.split(','),dtype=int)
         sort_arr = np.sort(np_arr)
