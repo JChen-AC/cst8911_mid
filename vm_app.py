@@ -14,15 +14,18 @@ from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 import numpy as np
 
+OUTPUT_CONTAINER = "outputs"
+INPUT_CONTAINER = "inputs"
+
 try:
     print("Getting Authentication")
-    account_url = "https://8911midterm.blob.core.windows.net"
+    account_url = "https://cst8911test.blob.core.windows.net"
     #default_credential = ManagedIdentityCredential(client_id="a5f2987b-e549-4953-a909-063a9b659fc1")
     default_credential = DefaultAzureCredential()
     blob_service_client = BlobServiceClient(account_url, credential=default_credential)
     #token = default_credential.get_token("https://storage.azure.com/.default")
-    input_container_client = blob_service_client.get_container_client("input")
-    output_container_client = blob_service_client.get_container_client("output")
+    input_container_client = blob_service_client.get_container_client(INPUT_CONTAINER)
+    output_container_client = blob_service_client.get_container_client(OUTPUT_CONTAINER)
 
 
 except Exception as ex:
@@ -74,7 +77,7 @@ def blob_test():
 
         ### WRITE TEST ###
         print("UPLOADING BLOB")
-        new_blob = blob_service_client.get_blob_client(container="output",blob=processed_blob)
+        new_blob = blob_service_client.get_blob_client(container=OUTPUT_CONTAINER,blob=processed_blob)
         # Upload the created file
         with open(file=processed_path, mode="rb") as data:
             new_blob.upload_blob(data)
