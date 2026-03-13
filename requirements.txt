@@ -3,4 +3,3 @@ requests
 numpy
 azure-storage-blob
 azure-identity
-jwt
