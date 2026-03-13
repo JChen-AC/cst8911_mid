@@ -90,6 +90,14 @@ def blob_test():
         print(ex)
         return jsonify({"ERROR":f"Blob test failed :error caused by {ex}"}),502
 
+# Send process request 
+@app.route('/blob_read',methods=['GET'])
+def blob_read():
+    ## LIST BLOB NAMES ##
+    print("Reading contianer")
+    blob_list = input_container_client.list_blobs()
+    return jsonify({"message":f"Blob Test completed : {blob_list}"}),205
+
 @app.route('/adf', methods=['POST'])
 def adf_test():
     inputs_data = request.json    
@@ -118,7 +126,7 @@ def adf_blob_test():
     try:
         ### WRITE TEST ###
         print("UPLOADING BLOB")
-        new_blob = blob_service_client.get_blob_client(container="outputs",blob=processed_blob)
+        new_blob = blob_service_client.get_blob_client(container=OUTPUT_CONTAINER,blob=processed_blob)
         # Upload the created file
         with open(file=processed_path, mode="rb") as data:
             new_blob.upload_blob(data)
@@ -151,7 +159,7 @@ def full_test():
 
         ### WRITE TEST ###
         print("UPLOADING BLOB")
-        new_blob = blob_service_client.get_blob_client(container="outputs",blob=processed_blob)
+        new_blob = blob_service_client.get_blob_client(container=OUTPUT_CONTAINER,blob=processed_blob)
         # Upload the created file
         with open(file=processed_path, mode="rb") as data:
             new_blob.upload_blob(data)
